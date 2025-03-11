@@ -169,16 +169,8 @@ void fileloop() {
           break;
         sprintf(filepath, "%s:/%s", devoptab_list[i]->name,
                 filelist[j].filename);
-        if ((filelist[j].filetype == TYPE_UPDXELL ||
-             filelist[j].filetype == TYPE_NANDIMAGE) &&
-            (xenon_get_console_type() == REV_CORONA_PHISON)) {
-          wait_and_cleanup_line();
-          printf("MMC Console Detected! Skipping %s...\r", filepath);
-          j++;
-        } else {
-          try_load_file(filepath, filelist[j].filetype);
-          j++;
-        }
+        try_load_file(filepath, filelist[j].filetype);
+        j++;
       } while (filelist[j].filename != NULL);
       j = 0;
     }
@@ -188,20 +180,11 @@ void fileloop() {
 void tftp_loop(ip_addr_t server) {
   int i = 0;
   do {
-    if ((filelist[i].filetype == TYPE_UPDXELL ||
-         filelist[i].filetype == TYPE_NANDIMAGE) &&
-        (xenon_get_console_type() == REV_CORONA_PHISON)) {
-      wait_and_cleanup_line();
-      printf("Skipping TFTP %s:%s... MMC Detected!\r", ipaddr_ntoa(&server),
-             filelist[i].filename);
-      i++;
-    } else {
-      wait_and_cleanup_line();
-      printf("Trying TFTP %s:%s... \r", ipaddr_ntoa(&server),
-             filelist[i].filename);
-      boot_tftp(server, filelist[i].filename, filelist[i].filetype);
-      i++;
-    }
+    wait_and_cleanup_line();
+    printf("Trying TFTP %s:%s... \r", ipaddr_ntoa(&server),
+           filelist[i].filename);
+    boot_tftp(server, filelist[i].filename, filelist[i].filetype);
+    i++;
     network_poll();
   } while (filelist[i].filename != NULL);
 
