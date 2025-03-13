@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: free60/libxenon:latest
+    container: ghcr.io/barrenechea/libxenon:latest
 
     steps:
     - name: Checkout
